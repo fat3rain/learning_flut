@@ -142,7 +142,5 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       listUsers = trans;
     });
-    // print('может ответ пришел');
-    // print(listUsers[0]);
   }
 }
