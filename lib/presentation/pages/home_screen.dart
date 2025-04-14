@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_learning_app/data/entities/bloc/user_list_bloc.dart';
 import 'package:flutter_learning_app/data/entities/user.dart';
 import 'package:flutter_learning_app/presentation/pages/interactive.dart';
 import 'package:http/http.dart' as http;
@@ -13,8 +15,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final _userListBloc = UserListBloc();
   final TextEditingController _nameController = TextEditingController();
   List<User> listUsers = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,22 +78,30 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           Expanded(
-            child: ListView.builder(
-                itemCount: listUsers.length,
-                itemBuilder: (context, index) {
-                  final user = listUsers[index];
-                  return ListTile(
-                    title: Text(
-                      '${user.email} ${user.gender}',
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    subtitle: Text(
-                      '${user.name.first} ${user.location.street.name}',
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    leading: Image.network(user.picture.large),
-                  );
-                }),
+            child: BlocBuilder<UserListBloc, UserListState>(
+              bloc: _userListBloc,
+              builder: (context, state) {
+                if (state is UserListLoaded) {
+                  return ListView.builder(
+                      itemCount: state.users.length,
+                      itemBuilder: (context, index) {
+                        final user = state.users[index];
+                        return ListTile(
+                          title: Text(
+                            '${user.email} ${user.gender}',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          subtitle: Text(
+                            '${user.name.first} ${user.location.street.name}',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          leading: Image.network(user.picture.large),
+                        );
+                      });
+                }
+                return const CircularProgressIndicator();
+              },
+            ),
           ),
           FloatingActionButton(
             onPressed: pressActionBut,
@@ -111,36 +123,8 @@ class _HomeScreenState extends State<HomeScreen> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  void pressActionBut() async {
-    print('вы нажали на кнопку');
-    const url = 'https://randomuser.me/api/?results=10';
-    final uri = Uri.parse(url);
-    final response = await http.get(uri);
-    final body = response.body;
-    final json = jsonDecode(body);
-    final results = json['results'] as List<dynamic>;
-
-    final trans = results.map((e) {
-      final picture = Picture(
-          large: e['picture']['large'],
-          medium: e['picture']['medium'],
-          thumbnail: e['picture']['thumbnail']);
-      final name = Name(
-          title: e['name']['title'],
-          first: e['name']['first'],
-          last: e['name']['last']);
-
-      final street = Street(name: e['location']['street']['name']);
-      final location = Location(city: e['location']['city'], street: street);
-      return User(
-          gender: e['gender'],
-          email: e['email'],
-          name: name,
-          picture: picture,
-          location: location);
-    }).toList();
-    setState(() {
-      listUsers = trans;
-    });
+  void pressActionBut() {
+    print('sss');
+    _userListBloc.add(LoadUsersEvent());
   }
 }
