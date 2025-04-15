@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_learning_app/data/entities/user_age_bloc/user_age_bloc.dart';
 import 'package:flutter_learning_app/data/entities/user_list_bloc/user_list_bloc.dart';
 import 'package:flutter_learning_app/data/entities/user.dart';
 import 'package:flutter_learning_app/presentation/pages/interactive.dart';
@@ -17,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _userListBloc = UserListBloc();
   final TextEditingController _nameController = TextEditingController();
+  final _userAgeBloc = UserAge();
   List<User> listUsers = [];
 
   @override
@@ -47,8 +49,17 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               IconButton(
                 onPressed: () => {
-                  pressIconBut(_nameController.text.trim()),
-                  _nameController.clear()
+                  _userAgeBloc.add(GetAgeEvent(_nameController.text.trim())),
+                  BlocBuilder<UserAge, UserAgeState>(
+                    bloc: _userAgeBloc,
+                    builder: (context, state) {
+                      if (state is UserAgeLoaded) {
+                        final snackBar = SnackBar(content: Text(state.age));
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
+                      return const CircularProgressIndicator();
+                    },
+                  )
                 },
                 icon: const Icon(Icons.check),
                 color: Colors.white,
