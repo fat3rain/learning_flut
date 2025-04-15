@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_learning_app/data/entities/bloc/user_list_bloc.dart';
+import 'package:flutter_learning_app/data/entities/user_list_bloc/user_list_bloc.dart';
 import 'package:flutter_learning_app/data/entities/user.dart';
 import 'package:flutter_learning_app/presentation/pages/interactive.dart';
 import 'package:http/http.dart' as http;
