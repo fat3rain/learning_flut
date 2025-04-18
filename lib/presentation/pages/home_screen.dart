@@ -24,6 +24,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: pressActionBut,
+        child: const Icon(Icons.add),
+      ),
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -50,16 +54,6 @@ class _HomeScreenState extends State<HomeScreen> {
               IconButton(
                 onPressed: () => {
                   _userAgeBloc.add(GetAgeEvent(_nameController.text.trim())),
-                  BlocBuilder<UserAge, UserAgeState>(
-                    bloc: _userAgeBloc,
-                    builder: (context, state) {
-                      if (state is UserAgeLoaded) {
-                        final snackBar = SnackBar(content: Text(state.age));
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      }
-                      return const CircularProgressIndicator();
-                    },
-                  )
                 },
                 icon: const Icon(Icons.check),
                 color: Colors.white,
@@ -88,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: const Icon(Icons.forward))
             ],
           ),
-          Expanded(
+          Flexible(
             child: BlocBuilder<UserListBloc, UserListState>(
               bloc: _userListBloc,
               builder: (context, state) {
@@ -110,14 +104,25 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       });
                 }
-                return const CircularProgressIndicator();
+                return const CircularProgressIndicator.adaptive(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  backgroundColor: Colors.red,
+                );
               },
             ),
           ),
-          FloatingActionButton(
-            onPressed: pressActionBut,
-            child: const Icon(Icons.add),
-          )
+          BlocListener<UserAge, UserAgeState>(
+            bloc: _userAgeBloc,
+            listener: (context, state) {
+              print(state.toString());
+
+              if (state is UserAgeLoaded) {
+                final snackBar = SnackBar(content: Text(state.age));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
+            },
+            child: const SizedBox(),
+          ),
         ],
       ),
     );
