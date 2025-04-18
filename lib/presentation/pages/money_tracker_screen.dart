@@ -81,135 +81,164 @@ class _MoneyTrackerScreenState extends State<MoneyTrackerScreen> {
             ))
         .toList();
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back_ios),
-          color: Colors.red,
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+      child: Scaffold(
         backgroundColor: Colors.black,
-        title: const Text(
-          'money tracker',
-          style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.w700, fontSize: 30),
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back_ios),
+            color: Colors.red,
+          ),
+          backgroundColor: Colors.black,
+          title: const Text(
+            'money tracker',
+            style: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.w700, fontSize: 30),
+          ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        // mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: 300,
-                height: 60,
-                child: TextField(
-                  style: const TextStyle(color: Colors.white),
-                  keyboardType: TextInputType.number,
-                  controller: _moneyController,
-                  decoration: InputDecoration(
-                      label: const Text('Write a sum you spended'),
-                      labelStyle: const TextStyle(
-                          color: Color.fromARGB(96, 255, 255, 255)),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(40))),
-                ),
-              ),
-              IconButton(
-                  onPressed: () {
-                    if (_moneyController.text.trim() != '') {
-                      // allTargers.add(_targetController.text.trim());
-                      _addToRes(_targetController.text.trim(),
-                          double.parse(_moneyController.text.trim()));
-                    }
-                  },
-                  icon: Icon(
-                    Icons.money,
-                    color: Colors.green[300],
-                  ))
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: 300,
-                height: 60,
-                child: TextField(
-                  style: const TextStyle(color: Colors.white),
-                  controller: _targetController,
-                  decoration: InputDecoration(
-                      label: const Text('Write a subject for spending'),
-                      labelStyle: const TextStyle(
-                          color: Color.fromARGB(96, 255, 255, 255)),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(40))),
-                ),
-              ),
-              IconButton(
-                  onPressed: () {
-                    deleteInfo();
-                  },
-                  icon: const Icon(
-                    Icons.delete,
-                    color: Colors.red,
-                  ))
-            ],
-          ),
-          if (results.isNotEmpty)
-            SizedBox(
-                key: PieChartKey,
-                width: 200,
-                height: 200,
-                child: PieChart(
-                  PieChartData(
-                    sections: sections,
-                    centerSpaceRadius: 40,
-                  ),
-                  swapAnimationDuration: const Duration(seconds: 2),
-                  swapAnimationCurve: Curves.bounceInOut,
-                )),
-          Center(
-            child: Text(
-              allSums.isNotEmpty ? 'Все расходы:' : 'Данных пока что нет...',
-              style: const TextStyle(color: Colors.white),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(
+              height: 10,
             ),
-          ),
-          // SizedBox(
-          //     height: 20,
-          //     width: 30,
-          //     child: TimePickerDialog(
-          //       initialTime: TimeOfDay.now(),
-          //     )),
-          if (allSums.isNotEmpty)
-            Flexible(
-                child: ListView.builder(
-                    itemCount: allTargers.length,
-                    itemBuilder: (context, index) {
-                      final double sum = allSums[index];
-                      final String target = allTargers[index];
+            Row(
+              children: [
+                SizedBox(
+                  width: 300,
+                  height: 60,
+                  child: TextField(
+                    style: const TextStyle(color: Colors.white),
+                    keyboardType: TextInputType.number,
+                    controller: _moneyController,
+                    decoration: InputDecoration(
+                        label: const Text('Write a sum you spended'),
+                        labelStyle: const TextStyle(
+                            color: Color.fromARGB(96, 255, 255, 255)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(40))),
+                  ),
+                ),
+                IconButton(
+                    onPressed: () {
+                      if (_moneyController.text.trim() != '') {
+                        // allTargers.add(_targetController.text.trim());
+                        _addToRes(_targetController.text.trim(),
+                            double.parse(_moneyController.text.trim()));
+                      }
+                    },
+                    icon: Icon(
+                      Icons.money,
+                      color: Colors.green[300],
+                    ))
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  width: 300,
+                  height: 60,
+                  child: TextField(
+                    style: const TextStyle(color: Colors.white),
+                    controller: _targetController,
+                    decoration: InputDecoration(
+                        label: const Text('Write a subject for spending'),
+                        labelStyle: const TextStyle(
+                            color: Color.fromARGB(96, 255, 255, 255)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(40))),
+                  ),
+                ),
+                IconButton(
+                    onPressed: () {
+                      deleteInfo();
+                    },
+                    icon: const Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    )),
+                // TextButton(
+                //     onPressed: () async{
+                //       final DateTime? pickedDate = await
+                //       showDatePicker(
+                //           context: context,
+                //           initialDate: DateTime.now(),
+                //           firstDate: DateTime(2020),
+                //           lastDate: DateTime(2027));
+                //     },
+                //     child: const Text('введите дату'))
+              ],
+            ),
+            if (results.isNotEmpty)
+              SizedBox(
+                  key: PieChartKey,
+                  width: 200,
+                  height: 200,
+                  child: PieChart(
+                    PieChartData(
+                      sections: sections,
+                      centerSpaceRadius: 40,
+                    ),
+                    swapAnimationDuration: const Duration(seconds: 2),
+                    swapAnimationCurve: Curves.bounceInOut,
+                  )),
+            Center(
+              child: Text(
+                allSums.isNotEmpty ? 'Все расходы:' : 'Данных пока что нет...',
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+            // SizedBox(
+            //     height: 20,
+            //     width: 30,
+            //     child: TimePickerDialog(
+            //       initialTime: TimeOfDay.now(),
+            //     )),
+            if (allSums.isNotEmpty)
+              Flexible(
+                  child: ListView.builder(
+                      itemCount: allTargers.length,
+                      itemBuilder: (context, index) {
+                        final double sum = allSums[index];
+                        final String target = allTargers[index];
 
-                      return ListTile(
-                        title: Text(
-                          target,
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                        subtitle: Text(sum.toString()),
-                      );
-                    })),
-        ],
+                        return ListTile(
+                          trailing: IconButton(
+                              onPressed: () {
+                                deleteOneEntry(index, target);
+                              },
+                              icon: const Icon(
+                                Icons.remove,
+                                color: Colors.white,
+                              )),
+                          title: Text(
+                            target,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          subtitle: Text(sum.toString()),
+                        );
+                      })),
+          ],
+        ),
       ),
     );
+  }
+
+  Future<void> deleteOneEntry(int index, String key) async {
+    results.remove(key);
+    allTargers.removeAt(index);
+    allSums.removeAt(index);
+    await _jsonEncode(results);
+    await _jsonDecode();
+    setState(() {});
   }
 
   void deleteInfo() {
